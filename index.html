@@ -1,84 +1,107 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Affiliate Dashboard — Sistem Uang Berputar</title>
 
 <style>
-:root {
-  --bg:#f3fbff; --card:#e6f7ff; --accent:#66c2ff; --accent-2:#8fd6ff;
-  --muted:#6b8596; --glass:rgba(255,255,255,0.6); --success:#23c48a;
-  --danger:#ff6b6b; font-family: Inter, system-ui, sans-serif;
+  :root{
+    --bg:#f3fbff;--card:#e6f7ff;--accent:#66c2ff;--accent-2:#8fd6ff;
+    --muted:#6b8596;--glass: rgba(255,255,255,0.6);--success:#23c48a;
+    --danger:#ff6b6b;font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,var(--bg),#eef9ff);color:#083042}
+  .container{max-width:1100px;margin:28px auto;padding:20px}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+        display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+  h1{margin:0;font-size:20px}
+  .sub{color:var(--muted);font-size:13px}
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+  .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(6,30,45,0.06)}
+  .col-4{grid-column:span 4}
+  .col-8{grid-column:span 8}
+  .col-12{grid-column:span 12}
+  .overview{display:flex;gap:12px}
+  .kpi{flex:1;padding:12px;border-radius:10px;background:rgba(255,255,255,0.5)}
+  .kpi h3{margin:0;font-size:14px;color:var(--muted)}
+  .kpi p{margin-top:8px;margin-bottom:0;font-weight:700;font-size:20px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:8px;text-align:left}
+  thead th{color:var(--muted);font-size:13px}
+  tbody tr{border-top:1px solid rgba(8,48,66,0.06)}
+  .badge{padding:6px 8px;border-radius:999px;font-size:12px;background:var(--glass)}
+  .badge.pending{background:#fff3cd;color:#a37c00}
+  .badge.paid{background:#e6f0ff;color:#1557ff}
+  .badge.approved{background:#e6fff3;color:#23c48a}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  input,select{padding:8px;border-radius:8px;border:1px solid rgba(6,30,45,0.08);min-width:160px}
+  button{padding:8px 12px;border-radius:8px;border:0;background:var(--accent);color:white;cursor:pointer}
+  button.alt{background:transparent;color:var(--accent);border:1px solid rgba(6,30,45,0.06)}
+  footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+  .muted{color:var(--muted)}
+  #ownerArea{display:none}
+  .admin-panel{background:white;padding:12px;border-radius:10px;margin-top:12px}
+
+  /* Withdraw modal */
+  #withdrawModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.25);
+    align-items:center;justify-content:center;}
+  #withdrawBox{background:white;padding:18px;border-radius:12px;max-width:420px;width:90%;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2)}
+  /* small responsive */
+  @media (max-width:900px){ .col-8,.col-4{grid-column:span:12} .overview{flex-direction:column} }
+
+/* RESPONSIVE FIX for Mobile */
+@media (max-width: 768px) {
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .brand {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  #balanceDisplay {
+    font-size: 14px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .col-8, .col-4, .col-12 {
+    grid-column: span 12 !important;
+  }
+
+  .overview {
+    flex-direction: column;
+  }
+
+  input, select {
+    width: 100% !important;
+  }
+
+  .controls {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  #withdrawBox {
+    width: 95% !important;
+  }
 }
-
-*{box-sizing:border-box}
-body {margin:0; background:linear-gradient(180deg,var(--bg),#eef9ff); color:#083042}
-
-.container{max-width:1100px;margin:28px auto;padding:20px}
-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-
-.brand{display:flex;gap:12px;align-items:center}
-.logo{width:56px;height:56px;border-radius:12px;
-  background:linear-gradient(135deg,var(--accent),var(--accent-2));
-  display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
-
-h1{margin:0;font-size:22px}
-.sub{color:var(--muted);font-size:13px}
-
-.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
-.card{background:var(--card);padding:14px;border-radius:12px;
-  box-shadow:0 6px 20px rgba(6,30,45,0.06)}
-
-.col-4{grid-column:span 4}
-.col-8{grid-column:span 8}
-.col-12{grid-column:span 12}
-
-.overview{display:flex;gap:12px}
-.kpi{flex:1;padding:12px;border-radius:10px;background:rgba(255,255,255,0.55)}
-.kpi h3{margin:0;font-size:14px;color:var(--muted)}
-.kpi p{margin-top:8px;margin-bottom:0;font-weight:700;font-size:20px}
-
-table{width:100%;border-collapse:collapse;font-size:14px}
-th,td{padding:8px;text-align:left}
-thead th{color:var(--muted);font-size:13px}
-tbody tr{border-top:1px solid rgba(8,48,66,0.06)}
-
-.controls{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
-input,select{padding:9px;border-radius:8px;border:1px solid rgba(6,30,45,0.08);min-width:160px;width:100%}
-
-button{padding:8px 14px;border-radius:8px;border:0;background:var(--accent);
-color:white;cursor:pointer;font-size:14px}
-button.alt{background:white;color:var(--accent);border:1px solid var(--accent)}
-
-footer{text-align:center;margin-top:28px;font-size:13px;color:var(--muted)}
-
-#ownerArea{display:none}
-#memberList{padding:4px}
-
-.owner-item{
-  background:white;padding:10px;margin-bottom:8px;border-radius:8px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.05)
-}
-
-#withdrawModal{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.25);
-  display:flex;align-items:center;justify-content:center;
-}
-
-#withdrawBox{
-  background:white;padding:18px;border-radius:12px;max-width:420px;width:92%;
-  box-shadow:0 10px 30px rgba(0,0,0,0.25)
-}
-
-/* MOBILE RESPONSIVE */
-@media(max-width:900px){
-  .grid{grid-template-columns:1fr}
-  .col-4,.col-8,.col-12{grid-column:span 12}
-  header{flex-direction:column;align-items:flex-start;gap:8px}
-  .overview{flex-direction:column}
-  input,select,button{width:100%}
-}
+  
 </style>
 </head>
 
@@ -90,7 +113,7 @@ footer{text-align:center;margin-top:28px;font-size:13px;color:var(--muted)}
     <div class="logo" id="logoTxt">AF</div>
     <div>
       <h1 id="title">Nama Member</h1>
-      <div class="sub">Sistem uang berputar — localStorage (versi owner default)</div>
+      <div class="sub">Light blue theme — Sistem uang berputar (localStorage).</div>
     </div>
   </div>
 
@@ -100,234 +123,280 @@ footer{text-align:center;margin-top:28px;font-size:13px;color:var(--muted)}
   </div>
 </header>
 
-<script>
-/* ============================
-   CONFIG & CONSTANTS
-============================ */
-const STORAGE_KEY = "affiliate_v3";
-const COMMISSION = 150000;     // Komisi = 150.000
-const OWNER_NAME = "distributorutama";  // Owner default
-const TAX = 5000;
+<main class="grid">
 
-/* ============================
-   LOAD DATABASE
-============================ */
-function loadDB() {
-  let db = localStorage.getItem(STORAGE_KEY);
-  if (!db) {
-    db = { members:{}, logs:[], materials:[], withdraws:[] };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-    return db;
-  }
-  return JSON.parse(db);
+  <!-- LEFT -->
+  <section class="card col-8">
+    <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+      <strong>Ringkasan</strong>
+      <div class="controls">
+        <button class="alt" onclick="seedDemo()">Isi Demo</button>
+        <button onclick="exportCSV()">Export CSV</button>
+        <button class="alt" onclick="resetData()">Reset</button>
+      </div>
+    </div>
+
+    <div class="overview">
+      <div class="kpi"><h3>Total Klik</h3><p id="totalClicks">0</p></div>
+      <div class="kpi"><h3>Total Penjualan</h3><p id="totalSales">0</p></div>
+      <div class="kpi"><h3>Total Komisi</h3><p id="totalCommission">Rp0</p></div>
+    </div>
+
+    <hr style="border:none;height:12px">
+
+    <strong>Riwayat Komisi</strong>
+    <table>
+      <thead>
+        <tr><th>Waktu</th><th>Order</th><th>Biaya</th><th>Jumlah</th><th>Status</th><th>Aksi</th></tr>
+      </thead>
+      <tbody id="commissionTable"></tbody>
+    </table>
+
+    <div id="ownerArea">
+  <strong>Panel Owner — Withdraw Requests</strong>
+  <div class="admin-panel" id="ownerPanel"></div>
+
+  <hr style="margin:14px 0">
+
+  <strong>Daftar Saldo Semua Member</strong>
+  <div class="admin-panel" id="ownerBalanceList"></div>
+</div>
+
+
+  </section>
+
+  <!-- RIGHT -->
+  <aside class="card col-4">
+    <strong>Nama Member Baru Bergabung</strong>
+    <div style="margin-top:8px; display:flex;gap:8px">
+      <input id="newMemberName" placeholder="Nama Member">
+      <button onclick="createMember()">Buat</button>
+    </div>
+
+    <div id="linkList" style="margin-top:10px;font-size:14px"></div>
+
+    <hr style="margin:14px 0">
+
+    <strong>Pengaturan Pembayaran</strong>
+    <div style="margin-top:8px">
+      <select id="payMethod">
+        <option value="bank">Bank (Transfer)</option>
+        <option value="dana">DANA</option>
+      </select>
+
+      <div style="margin-top:8px">
+        <input id="payAccount" placeholder="No. Rek / DANA">
+      </div>
+
+      <div class="controls">
+        <button onclick="savePayment()">Simpan</button>
+        <button onclick="openWithdraw()" class="alt">Withdraw</button>
+      </div>
+    </div>
+
+    <hr style="margin:14px 0">
+
+    <strong>Material Promosi</strong>
+    <ul id="materials" style="padding-left:16px"></ul>
+
+  </aside>
+
+  <!-- LOG AREA -->
+  <section class="card col-12">
+    <strong>Log Aktivitas</strong>
+    <div id="logArea" 
+      style="margin-top:8px;height:160px;overflow:auto;font-size:13px;color:var(--muted);
+             background:rgba(255,255,255,0.6);padding:8px;border-radius:8px">
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Demo affiliate — data lokal. Jangan gunakan untuk data sensitif.
+</footer>
+
+<!-- WITHDRAW MODAL -->
+<div id="withdrawModal">
+  <div id="withdrawBox">
+    <h3>Ajukan Withdraw</h3>
+
+    <label>Jumlah (angka)</label>
+    <input type="number" id="wdAmount" style="width:100%;margin-bottom:8px">
+
+    <label>Metode</label>
+    <select id="wdMethod" style="width:100%;margin-bottom:8px">
+      <option value="bank">Bank</option>
+      <option value="dana">DANA</option>
+    </select>
+
+    <label>No. Rek / DANA</label>
+    <input id="wdAccount" style="width:100%;margin-bottom:16px">
+
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button class="alt" onclick="closeWithdraw()">Batal</button>
+      <button onclick="submitWithdraw()">Ajukan</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* CONFIG */
+const STORAGE_KEY = "affiliate_v2";
+const COMMISSION = 150000;
+const TAX = 5000;
+const OWNER_NAME = "distributorutama"; // canonical owner key (lowercase)
+
+/* HELPERS */
+const qs = n => new URLSearchParams(location.search).get(n);
+const rupiah = n => "Rp"+Number(n||0).toLocaleString("id-ID");
+const gen = p => p+Math.random().toString(36).substring(2,9).toUpperCase();
+
+// Normalize display name: capitalize each word for nicer UI
+function toDisplayName(raw){
+  if(!raw) return raw;
+  return raw.split(/\s+/).map(w => w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
 }
 
+/* DB helpers */
+function loadDB(){
+  try{
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { members:{}, logs:[], withdraws:[] };
+  } catch(e){
+    return { members:{}, logs:[], withdraws:[] };
+  }
+}
 function saveDB(db){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+  render();
 }
 
-/* ============================
-   MEMBER HANDLING
-============================ */
-function ensureMemberRecord(name){
-  const key = name.trim().toLowerCase();
-  let db = loadDB();
-  if (!db.members[key]) {
-    db.members[key] = {
-      name,
-      clicks:0,
-      sales:0,
-      commission:0,
-      history:[],
-      payMethod:"",
-      payAccount:"",
-      links:[],
-      balance:0
+/* CURRENT USER (normalized key) */
+let currentUserRaw = qs("user") || "";
+let currentUser = currentUserRaw.trim().toLowerCase();
+
+// Auto fallback: jika tidak ada ?user= maka treat as Owner
+if(!currentUser) currentUser = OWNER_NAME.toLowerCase();
+
+/* Owner check */
+function isOwner(){
+  return currentUser.toLowerCase() === OWNER_NAME.toLowerCase();
+}
+
+/* Ensure member exists (key always lowercase) */
+/* This function will create a member record with a standardized display name if missing.
+   It will not call render() to avoid recursion; caller should call saveDB() or render() as needed.
+*/
+function ensureMemberRecordByKey(key, optionalDisplayName){
+  const db = loadDB();
+  const k = (key||'').trim().toLowerCase();
+  if(!k) return null;
+  if(!db.members[k]){
+    db.members[k] = {
+      // store display-friendly name separately; preserve proper capitalization
+      name: toDisplayName(optionalDisplayName || key),
+      balance: 0,
+      commissions: [],
+      method: "",
+      account: ""
+    };
+    // persist immediately
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+  }
+  return db.members[k];
+}
+
+/* Create member (downline) and give commission to inviter (currentUser) */
+function createMember(){
+  const rawName = document.getElementById("newMemberName").value.trim();
+  if(!rawName) return alert("Isi nama member baru.");
+
+  const newKey = rawName.toLowerCase();
+  const displayNew = toDisplayName(rawName);
+  const db = loadDB();
+
+  // ensure new member exists
+  if(!db.members[newKey]){
+    db.members[newKey] = {
+      name: displayNew,
+      balance: 0,
+      commissions: [],
+      method: "",
+      account: ""
     };
   }
-  saveDB(db);
-  return key;
-}
 
-/* ============================
-   INITIAL USER (OWNER DEFAULT)
-============================ */
-function getCurrentUser() {
-  const url = new URL(window.location.href);
-  let u = url.searchParams.get("user");
-
-  if (!u || u.trim() === "") {
-    // default = owner
-    return OWNER_NAME;
+  // ensure inviter exists (currentUser)
+  const inviterKey = (currentUser||'').trim().toLowerCase();
+  if(!inviterKey) return alert("User tidak dikenali.");
+  if(!db.members[inviterKey]){
+    // create inviter record if missing (use key as display name if not provided)
+    db.members[inviterKey] = {
+      name: toDisplayName(currentUserRaw || inviterKey),
+      balance: 0,
+      commissions: [],
+      method: "",
+      account: ""
+    };
   }
 
-  return u.trim().toLowerCase();
-}
+  // Add commission to inviter's account
+  const commissionRecord = {
+    id: gen("C"),
+    time: new Date().toLocaleString(),
+    biaya: "Pajak Member Baru",
+    jumlah: COMMISSION,
+    status: "paid",
+    from: displayNew
+  };
 
-let currentUser = getCurrentUser();
-let currentKey = ensureMemberRecord(currentUser);
+  db.members[inviterKey].commissions.unshift(commissionRecord);
+  db.members[inviterKey].balance = (db.members[inviterKey].balance || 0) + COMMISSION;
 
-/* ============================
-   RENDER PROFILE HEADER
-============================ */
-function renderHeader() {
-  let db = loadDB();
-  let me = db.members[currentKey];
+  db.logs.unshift({ t: new Date().toLocaleString(), txt: `${db.members[inviterKey].name} dapat komisi dari ${displayNew}` });
 
-  document.getElementById("title").innerText = me.name || currentUser;
-  document.getElementById("logoTxt").innerText = (me.name || currentUser)
-    .substring(0,2).toUpperCase();
+  // create public link for the new member — use lowercase key for consistency
+  const url = location.origin + location.pathname + "?user=" + encodeURIComponent(newKey);
 
-  document.getElementById("balanceDisplay").innerText =
-    "Saldo: Rp" + me.balance.toLocaleString();
-}
-
-/* ============================
-   CREATE NEW MEMBER
-============================ */
-function createMember(){
-  const name = document.getElementById("newMemberName").value.trim();
-  if (!name) return alert("Nama tidak boleh kosong");
-
-  const key = ensureMemberRecord(name);
-
-  let db = loadDB();
-  const base = window.location.origin + window.location.pathname;
-  const url = `${base}?user=${key}`;
-
-  db.members[key].links.push(url);
+  // persist and render
   saveDB(db);
 
-  renderLinks();
-  alert("Member berhasil dibuat!");
+  // show link
+  document.getElementById("linkList").innerHTML =
+    `<div style="background:white;padding:10px;border-radius:8px;margin-top:8px">
+      <strong>${displayNew}</strong><br>
+      <small>Link member baru:</small>
+      <input style="width:100%;border:0;background:transparent" value="${url}" readonly>
+    </div>`;
+
   document.getElementById("newMemberName").value = "";
 }
 
-/* ============================
-   RENDER LIST LINK MEMBER
-============================ */
-function renderLinks(){
-  let db = loadDB();
-  let me = db.members[currentKey];
-
-  let html = "";
-  me.links.forEach(l => {
-    html += `
-      <div style="background:white;padding:10px;border-radius:8px;margin-top:8px">
-        <strong>${me.name}</strong><br>
-        <small>Link member baru:</small>
-        <input style="width:100%;border:0;background:transparent" value="${l}" readonly>
-      </div>`;
-  });
-
-  document.getElementById("linkList").innerHTML = html;
-}
-
-/* ============================
-   PAYMENT SETTINGS
-============================ */
-function savePayment(){
-  let db = loadDB();
-  let me = db.members[currentKey];
-
-  me.payMethod = document.getElementById("payMethod").value;
-  me.payAccount = document.getElementById("payAccount").value.trim();
-
-  saveDB(db);
-  alert("Pengaturan pembayaran disimpan");
-}
-
-/* ============================
-   DEMO DATA (Optional)
-============================ */
-function seedDemo(){
-  let db = loadDB();
-  let me = db.members[currentKey];
-
-  me.clicks += 3;
-  me.sales += 1;
-
-  me.history.push({
-    time: new Date().toLocaleString(),
-    order:"DEMO123",
-    fee:"Pajak Member Baru",
-    amount:COMMISSION,
-    status:"paid"
-  });
-
-  me.balance += COMMISSION;
-
-  saveDB(db);
-  renderAll();
-  logAction(me.name + " menambahkan demo data");
-}
-
-/* ============================
-   RESET DATA
-============================ */
-function resetData(){
-  if (!confirm("Reset semua data untuk user ini?")) return;
-
-  let db = loadDB();
-  db.members[currentKey] = {
-    name: currentUser,
-    clicks:0,
-    sales:0,
-    commission:0,
-    history:[],
-    payMethod:"",
-    payAccount:"",
-    links:[],
-    balance:0
-  };
-
-  saveDB(db);
-  renderAll();
-}
-
-/* ============================
-   LOG SYSTEM
-============================ */
-function logAction(text){
-  let db = loadDB();
-  db.logs.push(new Date().toLocaleString() + " — " + text);
-  saveDB(db);
-}
-
-function renderLogs(){
-  let db = loadDB();
-  document.getElementById("logArea").innerHTML =
-    db.logs.slice().reverse().join("<br>");
-}
-
-/* ============================
-   WITHDRAW FLOW
-============================ */
+/* Withdraw flows */
 function openWithdraw(){
   document.getElementById("withdrawModal").style.display = "flex";
-  document.getElementById("wdAccount").value = (loadDB().members[currentKey].payAccount || "");
+  document.getElementById("wdAccount").value = document.getElementById("payAccount").value || "";
 }
-function closeWithdraw(){
-  document.getElementById("withdrawModal").style.display = "none";
-}
+function closeWithdraw(){ document.getElementById("withdrawModal").style.display = "none"; }
 
 function submitWithdraw(){
   const amt = Number(document.getElementById("wdAmount").value);
   const method = document.getElementById("wdMethod").value;
   const acc = document.getElementById("wdAccount").value.trim();
 
-  if (!amt || amt <= 0) return alert("Masukkan jumlah withdraw yang valid.");
-  if (!acc) return alert("Isi nomor rekening / DANA.");
+  if(amt <= 0) return alert("Nominal tidak valid");
+  if(!acc) return alert("Isi nomor rekening/DANA");
 
   const db = loadDB();
-  const me = db.members[currentKey];
+  const meKey = (currentUser||'').trim().toLowerCase();
+  ensureMemberRecordByKey(meKey, currentUserRaw || meKey);
+  const me = db.members[meKey];
 
-  if ((me.balance || 0) < amt) return alert("Saldo tidak mencukupi.");
+  if(me.balance < amt) return alert("Saldo kurang");
 
-  const id = gen("WD");
-  const req = {
-    id,
-    user: currentKey,
+  db.withdraws.unshift({
+    id: gen("WD"),
+    user: meKey,
     name: me.name,
     amount: amt,
     fee: TAX,
@@ -336,204 +405,191 @@ function submitWithdraw(){
     account: acc,
     status: "pending",
     time: new Date().toLocaleString()
-  };
+  });
 
-  db.withdraws.unshift(req);
-  db.logs.push(new Date().toLocaleString() + " — " + me.name + " ajukan withdraw " + rupiah(amt));
+  db.logs.unshift({ t: new Date().toLocaleString(), txt: `${me.name} ajukan withdraw` });
+
   saveDB(db);
-
   closeWithdraw();
-  renderAll();
   alert("Withdraw diajukan. Owner akan memproses secara manual.");
 }
 
-/* ============================
-   OWNER ACTIONS
-============================ */
-function approveWithdraw(id){
+/* Owner actions */
+function ownerApproveWithdraw(id){
   const db = loadDB();
-  const i = db.withdraws.findIndex(w => w.id === id);
-  if (i === -1) return alert("Request tidak ditemukan.");
-  const w = db.withdraws[i];
+  const wd = db.withdraws.find(x => x.id === id);
+  if(!wd) return alert("Request tidak ditemukan");
+  if(wd.status !== 'pending') return alert("Request bukan pending");
 
-  // find member and mark approved (owner will transfer manually)
-  if (db.members[w.user]){
-    // already deducted? we didn't deduct balance at request, so deduct now
-    db.members[w.user].balance = Math.max(0, (db.members[w.user].balance || 0) - w.amount);
-  }
-  db.withdraws[i].status = "approved";
-  db.withdraws[i].done = new Date().toLocaleString();
-  db.logs.push(new Date().toLocaleString() + " — Owner approve withdraw " + w.id + " (" + w.name + ")");
+  const memberKey = (wd.user||'').trim().toLowerCase();
+  ensureMemberRecordByKey(memberKey, wd.name);
+  const member = db.members[memberKey];
+
+  // decrease balance by full amount (owner does manual transfer)
+  member.balance = (member.balance || 0) - (wd.amount || 0);
+  if(member.balance < 0) member.balance = 0;
+
+  wd.status = "approved";
+  wd.done = new Date().toLocaleString();
+
+  db.logs.unshift({ t: new Date().toLocaleString(), txt: `Owner approve withdraw ${wd.id} (${wd.name})` });
   saveDB(db);
-  renderAll();
-  alert("Withdraw disetujui. Lakukan transfer manual sesuai data.");
+
+  alert("Withdraw approved. Ingat untuk transfer manual ke nomor tujuan.");
 }
 
-function cancelWithdraw(id){
+function ownerCancelWithdraw(id){
   if(!confirm("Batalkan request ini?")) return;
   const db = loadDB();
-  const i = db.withdraws.findIndex(w => w.id === id);
-  if(i === -1) return alert("Request tidak ditemukan.");
-  db.withdraws[i].status = "cancelled";
-  db.logs.push(new Date().toLocaleString() + " — Owner batalkan withdraw " + db.withdraws[i].id);
-  saveDB(db);
-  renderAll();
-}
-
-/* ============================
-   RENDER OWNER PANEL + MEMBER LIST
-============================ */
-function renderOwnerPanel(){
-  const db = loadDB();
-  if (currentKey !== OWNER_NAME) {
-    // hide owner area
-    document.getElementById("ownerArea").style.display = "none";
-    document.getElementById("ownerMembers").style.display = "none";
-    return;
-  }
-
-  document.getElementById("ownerArea").style.display = "block";
-  document.getElementById("ownerMembers").style.display = "block";
-
-  // withdraws
-  const panel = document.getElementById("ownerPanel");
-  if (!db.withdraws || db.withdraws.length === 0){
-    panel.innerHTML = "<div class='muted'>Belum ada withdraw</div>";
-  } else {
-    panel.innerHTML = db.withdraws.map(w => `
-      <div style="padding:8px;border-bottom:1px solid #eee">
-        <strong>${w.name}</strong><br>
-        Amount: ${rupiah(w.amount)} — Final: ${rupiah(w.final)}<br>
-        Metode: ${w.method} — Rek: ${w.account}<br>
-        Status: ${w.status}<br>
-        ${w.status === "pending" ? `<button onclick="approveWithdraw('${w.id}')">Approve</button>
-        <button class="alt" onclick="cancelWithdraw('${w.id}')">Cancel</button>` : ''}
-      </div>
-    `).join("");
-  }
-
-  // members list & balances
-  const memberPanel = document.getElementById("memberListPanel");
-  const entries = Object.entries(db.members || {});
-  if(entries.length === 0){
-    memberPanel.innerHTML = "<div class='muted'>Belum ada member</div>";
-  } else {
-    memberPanel.innerHTML = entries.map(([k,m]) => `
-      <div class="owner-item">
-        <strong>${m.name}</strong><br>
-        Saldo: ${rupiah(m.balance || 0)}<br>
-        Total Komisi: ${rupiah((m.commissions || []).reduce((a,c)=>a+(c.jumlah||0),0))}<br>
-        Transaksi: ${(m.commissions || []).length}<br>
-        <small>Link referral:</small><br>
-        <input style="width:100%;border:0;background:transparent;margin-top:6px" value="${location.origin + location.pathname + '?user=' + encodeURIComponent(k)}" readonly>
-      </div>
-    `).join("");
-  }
-}
-
-/* ============================
-   RENDER ALL
-============================ */
-function renderAll(){
-  renderHeader();
-  renderLogs();
-  renderLinks();
-  renderOwnerPanel();
-
-  // commission table for current user (if any)
-  const db = loadDB();
-  const me = db.members[currentKey];
-  // table already handled in renderLinks or header; ensure commissions shown
-  const tbody = document.getElementById("commissionTable");
-  if(!tbody) return;
-  if(!me.commissions || me.commissions.length === 0){
-    tbody.innerHTML = `<tr><td colspan="6" class="muted">Belum ada komisi</td></tr>`;
-  } else {
-    tbody.innerHTML = me.commissions.map(c => `
-      <tr>
-        <td data-label="Waktu">${c.time}</td>
-        <td data-label="Order">${c.id}</td>
-        <td data-label="Biaya">${c.biaya}</td>
-        <td data-label="Jumlah">${rupiah(c.jumlah)}</td>
-        <td data-label="Status"><span class="badge ${c.status}">${c.status}</span></td>
-        <td data-label="Aksi"></td>
-      </tr>`).join('');
-  }
-}
-
-/* ============================
-   UTILS: grant commission (when inviter buat member)
-   - add commission record and increase balance
-============================ */
-function grantCommissionTo(userKey, fromName){
-  const db = loadDB();
-  const key = userKey.toLowerCase();
-  ensureMemberRecord(key);
-  if(!db.members[key].commissions) db.members[key].commissions = [];
-
-  const rec = {
-    id: gen("C"),
-    time: new Date().toLocaleString(),
-    biaya: "Pajak Member Baru",
-    jumlah: COMMISSION,
-    status: "paid",
-    from: fromName
-  };
-  db.members[key].commissions.unshift(rec);
-  db.members[key].balance = (db.members[key].balance || 0) + COMMISSION;
-  db.logs.push(new Date().toLocaleString() + " — " + db.members[key].name + " dapat komisi dari " + fromName);
+  const wd = db.withdraws.find(x => x.id === id);
+  if(!wd) return alert("Request tidak ditemukan");
+  wd.status = "cancelled";
+  db.logs.unshift({ t: new Date().toLocaleString(), txt: `Owner membatalkan withdraw ${wd.id} (${wd.name})` });
   saveDB(db);
 }
 
-/* Let's ensure createMember also grants commission to inviter (currentKey) */
-function createMember(){
-  const raw = document.getElementById("newMemberName").value.trim();
-  if(!raw) return alert("Nama member baru harus diisi.");
-  const name = raw;
-  const key = name.toLowerCase().trim();
-  const base = location.origin + location.pathname;
-  const url = `${base}?user=${encodeURIComponent(key)}`;
-
+/* Payment settings */
+function savePayment(){
   const db = loadDB();
-  // ensure new member
-  if(!db.members[key]) db.members[key] = { name: toDisplayName(name), clicks:0, sales:0, commission:0, history:[], payMethod:"", payAccount:"", links:[], balance:0, commissions:[] };
-  db.members[key].links = db.members[key].links || [];
-  db.members[key].links.unshift(url);
-
-  // grant commission to current user (inviter)
-  grantCommissionTo(currentKey, toDisplayName(name));
-
-  db.logs.push(new Date().toLocaleString() + " — " + toDisplayName(currentKey) + " buat member " + toDisplayName(name));
+  const meKey = (currentUser||'').trim().toLowerCase();
+  ensureMemberRecordByKey(meKey, currentUserRaw || meKey);
+  db.members[meKey].method = document.getElementById("payMethod").value;
+  db.members[meKey].account = document.getElementById("payAccount").value.trim();
+  db.logs.unshift({ t: new Date().toLocaleString(), txt: `${db.members[meKey].name} menyimpan data pembayaran` });
   saveDB(db);
-  document.getElementById("newMemberName").value = "";
-  renderAll();
+  alert("Pengaturan tersimpan.");
 }
 
-/* ============================
-   INIT
-============================ */
-(function init(){
-  // ensure owner exists
-  ensureMemberRecord(OWNER_NAME);
-  // ensure current exists
-  ensureMemberRecord(currentUser);
-
-  renderAll();
-})();
-
-/* ============================
-   EXPORT / DEBUG
-============================ */
+/* Export CSV (commissions for current user) */
 function exportCSV(){
   const db = loadDB();
-  const me = db.members[currentKey];
-  const rows = [["time","order","biaya","jumlah","status"], ...((me.commissions||[]).map(c=>[c.time,c.id,c.biaya,c.jumlah,c.status]))];
-  const csv = rows.map(r=>r.map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(",")).join("\n");
-  const blob = new Blob([csv],{type:'text/csv'}); const u = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = u; a.download = `commissions_${me.name.replace(/\s+/g,'_')}.csv`; a.click(); URL.revokeObjectURL(u);
+  const meKey = (currentUser||'').trim().toLowerCase();
+  ensureMemberRecordByKey(meKey, currentUserRaw || meKey);
+  const me = db.members[meKey];
+
+  const rows = [
+    ["time","order","biaya","jumlah","status"],
+    ...((me.commissions || []).map(c => [c.time, c.id, c.biaya, c.jumlah, c.status]))
+  ];
+
+  const csv = rows.map(r => r.map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = `commissions_${me.name.replace(/\s+/g,'_')}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
-/* expose functions for buttons */
+/* Demo data seed */
+function seedDemo(){
+  const db = loadDB();
+  db.members = db.members || {};
+  db.members[OWNER_NAME] = db.members[OWNER_NAME] || { name: "DistributorUtama", balance: 450000, commissions: [], method:"", account:"" };
+  db.logs = db.logs || [];
+  db.logs.unshift({ t: new Date().toLocaleString(), txt: "Demo data ditambahkan" });
+  saveDB(db);
+}
+
+/* Reset */
+function resetData(){
+  if(!confirm("Reset semua data lokal?")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+/* RENDER UI */
+function render(){
+  const db = loadDB();
+  const meKey = (currentUser||'').trim().toLowerCase();
+  // ensure record exists
+  ensureMemberRecordByKey(meKey, currentUserRaw || meKey);
+  const me = db.members[meKey];
+
+  // header
+  document.getElementById("title").innerText = me.name || toDisplayName(currentUserRaw || meKey);
+  document.getElementById("logoTxt").innerText = (me.name||'AF').substring(0,2).toUpperCase();
+  document.getElementById("balanceDisplay").innerText = "Saldo: " + rupiah(me.balance || 0);
+  document.getElementById("withdrawStatus").innerText = (me.balance||0) > 0 ? "Ready" : "No Balance";
+
+  // KPIs
+  const totalSales = (me.commissions || []).length;
+  const totalComm = (me.commissions || []).reduce((s,c)=>s + (c.jumlah||0), 0);
+  document.getElementById("totalClicks").innerText = 0;
+  document.getElementById("totalSales").innerText = totalSales;
+  document.getElementById("totalCommission").innerText = rupiah(totalComm);
+
+  // commission table
+  const tb = document.getElementById("commissionTable");
+  if((me.commissions || []).length === 0){
+    tb.innerHTML = `<tr><td colspan="6" class="muted">Belum ada komisi</td></tr>`;
+  } else {
+    tb.innerHTML = (me.commissions || []).map(c => `
+      <tr>
+        <td>${c.time}</td>
+        <td>${c.id}</td>
+        <td>${c.biaya}</td>
+        <td>${rupiah(c.jumlah)}</td>
+        <td><span class="badge ${c.status}">${c.status}</span></td>
+        <td></td>
+      </tr>
+    `).join("");
+  }
+
+  // logs
+  document.getElementById("logArea").innerHTML = (db.logs || []).map(l => `<div>${l.t} — ${l.txt}</div>`).join("");
+
+  // owner panel
+  const ownerArea = document.getElementById("ownerArea");
+  if(isOwner()){
+    ownerArea.style.display = "block";
+    const panel = document.getElementById("ownerPanel");
+    if((db.withdraws || []).length === 0){
+      panel.innerHTML = "<div class='muted'>Belum ada withdraw</div>";
+    } else {
+      panel.innerHTML = (db.withdraws || []).map(w => `
+      
+        <div style="padding:8px;border-bottom:1px solid #eee">
+          <strong>${w.name}</strong><br>
+          Amount: ${rupiah(w.amount)} — Final: ${rupiah(w.final)}<br>
+          Metode: ${w.method} — Rek: ${w.account}<br>
+          Status: ${w.status}<br>
+          ${w.status === "pending" ? `
+            <button onclick="ownerApproveWithdraw('${w.id}')">Approve</button>
+            <button class="alt" onclick="ownerCancelWithdraw('${w.id}')">Cancel</button>
+          ` : ""}
+        </div>
+      `).join("");
+    }
+    // ======== LIST SALDO MEMBER ==========
+const balPanel = document.getElementById("ownerBalanceList");
+
+const memberKeys = Object.keys(db.members || {});
+if(memberKeys.length === 0){
+    balPanel.innerHTML = "<div class='muted'>Belum ada member.</div>";
+} else {
+    balPanel.innerHTML = memberKeys.map(k => {
+        const m = db.members[k];
+        return `
+            <div style="padding:8px;border-bottom:1px solid #eee">
+                <strong>${m.name}</strong><br>
+                Saldo: ${rupiah(m.balance || 0)}<br>
+                Payment: ${m.method || '-'} — ${m.account || '-'}
+            </div>
+        `;
+    }).join("");
+}
+
+  } else {
+    ownerArea.style.display = "none";
+  }
+}
+
+
+/* init */
+render();
+
+/* expose for debug */
 window.createMember = createMember;
 window.openWithdraw = openWithdraw;
 window.closeWithdraw = closeWithdraw;
@@ -542,9 +598,8 @@ window.savePayment = savePayment;
 window.exportCSV = exportCSV;
 window.seedDemo = seedDemo;
 window.resetData = resetData;
-window.approveWithdraw = approveWithdraw;
-window.cancelWithdraw = cancelWithdraw;
-
+window.ownerApproveWithdraw = ownerApproveWithdraw;
+window.ownerCancelWithdraw = ownerCancelWithdraw;
 </script>
 
 </body>
